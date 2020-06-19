@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Advent Pro' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'> <!-- titulo -->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat Subrayada' rel='stylesheet'> <!-- titulo -->
+
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="js/script.js"></script>
@@ -17,11 +20,11 @@
         <div class="conteudo" id="form">
             <form>
                 <label for="nome">Nome:</label>
-                <input class="field" type="text" name="nome" id="nome">
+                <input class="field" type="text" name="nome" id="nome" required>
                 <label for="sal">Salário:</label>
-                <input class="field" type="text" name="sal" id="sal">
+                <input class="field" type="number" name="sal" id="sal" required>
                 <label for="idade">Idade:</label>
-                <input class="field" type="number" name="idade" id="idade">
+                <input class="field" type="number" name="idade" id="idade" required>
                 <label for="avatar">Avatar:</label>
                 <input class="field" type="url" name="avatar" id="avatar">
                 <input onclick="onSave()" class="colorful" type="button" value="Salvar">
