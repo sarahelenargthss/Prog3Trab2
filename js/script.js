@@ -24,14 +24,14 @@ function atualizaEmpregados() {
             if (xHttpRequest.readyState === 4) {
                 if (xHttpRequest.status === 200) {
                     var empregados = JSON.parse(xHttpRequest.responseText).data;
-                    for(var i = 0; i < empregados.length; i++){
+                    for (var i = 0; i < empregados.length; i++) {
                         addEmpregadoLista(empregados[i], i + 1);
                     }
                 } else {
                     alert("Ocorreu um erro ao buscar empregados!");
                 }
             }
-        }catch( e ) {
+        } catch (e) {
             alert('Ocorreu uma exceção: ' + e.description);
         }
     };
@@ -45,7 +45,7 @@ function atualizaEmpregados() {
 function addEmpregadoLista(empregado, numRow) {
     var id = String(empregado.id);
     var sal = parseFloat(empregado.employee_salary);
-    if(isNaN(sal)){
+    if (isNaN(sal)) {
         sal = 0;
     }
 
@@ -54,7 +54,7 @@ function addEmpregadoLista(empregado, numRow) {
     element += "<td>" + String(empregado.employee_name) + "</td>";
     element += "<td> R$ " + sal + "</td>";
     element += "<td>" + String(empregado.employee_age) + "</td>";
-    element += "<td><button class=\"colorful\"><a href=\"" + empregado.profile_image + "\")>...</a></button></td>";
+    element += "<td><button class=\"colorful\"><a href=\"" + empregado.profile_image + "\") target=\"_blank\">...</a></button></td>";
     element += "<td> <button class=\"colorful\" onclick=\"editarEmpregado(\'" + id + "\')\">Editar</button>";
     element += "<button class=\"colorful\" onclick=\"excluirEmpregado(\'" + id + "\', " + numRow + ")\">Excluir</button> </td>";
     element += "</tr>";
@@ -81,7 +81,7 @@ function editarEmpregado(id) {
                     alert("Ocorreu um erro ao buscar valores do empregado!");
                 }
             }
-        }catch( e ) {
+        } catch (e) {
             alert('Ocorreu uma exceção: ' + e.description);
         }
     };
@@ -92,25 +92,32 @@ function editarEmpregado(id) {
 }
 
 function excluirEmpregado(id, numRow) {
-    var xHttpRequest = new XMLHttpRequest();
+    $("#modal").css("display", "flex");
 
-    xHttpRequest.onreadystatechange = function () {
-        try {
-            if (xHttpRequest.readyState === 4) {
-                if (xHttpRequest.status === 200) {
-                    $("#table tr:eq(" + numRow + ")").remove();
-                } else {
-                    alert("Ocorreu um erro ao tentar excluir o empregado!");
+    $(".opExclusao").click(function () {
+        if (this.id == "sim") {
+            var xHttpRequest = new XMLHttpRequest();
+
+            xHttpRequest.onreadystatechange = function () {
+                try {
+                    if (xHttpRequest.readyState === 4) {
+                        if (xHttpRequest.status === 200) {
+                            $("#table tr:eq(" + numRow + ")").remove();
+                        } else {
+                            alert("Ocorreu um erro ao tentar excluir o empregado!");
+                        }
+                    }
+                } catch (e) {
+                    alert('Ocorreu uma exceção: ' + e.description);
                 }
-            }
-        }catch( e ) {
-            alert('Ocorreu uma exceção: ' + e.description);
-        }
-    };
+            };
 
-    xHttpRequest.open('DELETE', 'http://rest-api-employees.jmborges.site/api/v1/delete/' + id, true);
-    xHttpRequest.setRequestHeader("Content-Type", "application/json");
-    xHttpRequest.send();
+            xHttpRequest.open('DELETE', 'http://rest-api-employees.jmborges.site/api/v1/delete/' + id, true);
+            xHttpRequest.setRequestHeader("Content-Type", "application/json");
+            xHttpRequest.send();
+        }
+        $("#modal").css("display", "none");
+    });
 }
 
 function changeFrame(op) {
@@ -131,16 +138,14 @@ function changeFrame(op) {
 }
 
 function onSave() {
-    //valida campos e salva empregado
-
     var name = $("#nome").val();
     var salary = parseFloat($("#sal").val());
-    if(isNaN(salary)){
+    if (isNaN(salary)) {
         alert("Digite um valor de salário válido!");
         return;
     }
     var age = parseInt($("#idade").val());
-    if(isNaN(age)){
+    if (isNaN(age)) {
         alert("Digite uma idade válida!");
         return;
     }
@@ -150,9 +155,6 @@ function onSave() {
     strEmpregado += "\"salary\":\"" + salary + "\",";
     strEmpregado += "\"age\":\"" + age + "\",";
     strEmpregado += "\"profile_image\":\"" + avatar + "\"}";
-
-    // employee_name, employee_salary, employee_age, profile_image
-    // name, salary, age, profile_image
 
     var xHttpRequest = new XMLHttpRequest();
 
@@ -166,16 +168,16 @@ function onSave() {
                     alert("Ocorreu um erro para salvar o empregado!");
                 }
             }
-        }catch( e ) {
+        } catch (e) {
             alert('Ocorreu uma exceção: ' + e.description);
         }
     };
 
-    if(formCadastro){ // salva
+    if (formCadastro) { // salva
         xHttpRequest.open('POST', 'http://rest-api-employees.jmborges.site/api/v1/create', true);
         xHttpRequest.setRequestHeader("Content-Type", "application/json");
         xHttpRequest.send(strEmpregado);
-    }else{ //atualiza
+    } else { //atualiza
         xHttpRequest.open('PUT', 'http://rest-api-employees.jmborges.site/api/v1/update/' + idEmpregado, true);
         xHttpRequest.setRequestHeader("Content-Type", "application/json");
         xHttpRequest.send(strEmpregado);
